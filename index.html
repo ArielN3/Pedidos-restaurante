@@ -3,197 +3,481 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedidos - Restaurante Chinês</title>
+    <title>Pedidos - Restaurante Chinês Imperial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cor-primaria: #E74C3C;
-            --cor-secundaria: #F5B041;
-            --cor-texto: #333;
-            --cor-fundo: #FDF2E9;
+            --vermelho-chines: #E31837;
+            --dourado: #FFD700;
+            --preto-lacrado: #1A1A1A;
+            --branco-puro: #FFFFFF;
+            --cinza-claro: #F5F5F5;
+            --sombra: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transicao: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 800px;
+            font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+            background-color: var(--cinza-claro);
+            color: var(--preto-lacrado);
+            line-height: 1.6;
+            background-image: url('https://i.imgur.com/ZYwD6yS.png');
+            background-size: 300px;
+            background-blend-mode: overlay;
+            background-color: rgba(245, 245, 245, 0.9);
+        }
+        
+        .container {
+            max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: var(--cor-fundo);
-            color: var(--cor-texto);
-        }
-        h1, h2 {
-            color: var(--cor-primaria);
-            text-align: center;
-        }
-        .cardapio-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            margin: 8px 0;
-            background: white;
+            padding: 2rem;
+            background-color: var(--branco-puro);
+            box-shadow: var(--sombra);
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--vermelho-chines), var(--dourado));
+            border-radius: 3px;
+        }
+        
+        h1, h2 {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-weight: 700;
+            color: var(--vermelho-chines);
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin: 1.5rem 0;
+            position: relative;
+            padding-left: 1rem;
+            border-left: 4px solid var(--dourado);
+        }
+        
+        .cardapio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .cardapio-item {
+            background: var(--branco-puro);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: var(--sombra);
+            transition: var(--transicao);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cardapio-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .cardapio-item span {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+        
+        .cardapio-item .preco {
+            color: var(--vermelho-chines);
+            font-weight: 500;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .adicionar-btn {
+            background: var(--vermelho-chines);
+            color: var(--branco-puro);
+            border: none;
+            padding: 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transicao);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .adicionar-btn:hover {
+            background: #C0102C;
+            transform: translateY(-2px);
+        }
+        
+        .carrinho-container {
+            background: var(--branco-puro);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: var(--sombra);
+            margin-bottom: 2rem;
+        }
+        
+        #lista-carrinho {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
         .carrinho-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            margin: 8px 0;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            background: var(--cinza-claro);
+            border-radius: 6px;
+            transition: var(--transicao);
         }
+        
+        .carrinho-item:hover {
+            background: #EDEDED;
+        }
+        
         .remover-btn {
+            background: transparent;
+            color: #E74C3C;
+            border: 1px solid #E74C3C;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transicao);
+            font-size: 0.9rem;
+        }
+        
+        .remover-btn:hover {
             background: #E74C3C;
             color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.3s;
         }
-        .remover-btn:hover {
-            background: #C0392B;
-        }
-        .adicionar-btn {
-            background: #2ECC71;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .adicionar-btn:hover {
-            background: #27AE60;
-        }
+        
         #total {
-            font-weight: bold;
-            font-size: 1.3em;
-            margin: 15px 0;
+            font-weight: 700;
+            font-size: 1.4rem;
             text-align: right;
-            color: var(--cor-primaria);
+            color: var(--vermelho-chines);
+            padding-top: 1rem;
+            border-top: 1px dashed #DDD;
         }
-        input, button, textarea {
-            padding: 12px;
-            margin: 8px 0;
+        
+        .info-cliente {
+            background: var(--branco-puro);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: var(--sombra);
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--vermelho-chines);
+        }
+        
+        input, textarea {
             width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #ddd;
+            padding: 1rem;
+            border: 1px solid #DDD;
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 1rem;
+            transition: var(--transicao);
         }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--vermelho-chines);
+            box-shadow: 0 0 0 2px rgba(227, 24, 55, 0.2);
+        }
+        
+        #observacoes {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
         .enviar-btn {
-            background: var(--cor-primaria);
-            color: white;
+            background: linear-gradient(135deg, var(--vermelho-chines), #C0102C);
+            color: var(--branco-puro);
             border: none;
-            padding: 15px;
+            padding: 1.2rem;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 1.1em;
+            font-size: 1.1rem;
+            font-weight: 600;
             width: 100%;
-            margin-top: 20px;
-            transition: background 0.3s;
+            transition: var(--transicao);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
         }
+        
         .enviar-btn:hover {
-            background: #C0392B;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #C0102C, var(--vermelho-chines));
         }
-        .hidden {
-            display: none;
+        
+        .enviar-btn:active {
+            transform: translateY(0);
         }
+        
+        #tempo-espera {
+            background: linear-gradient(to right, #FFF9E6, #FFF4D4);
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+            text-align: center;
+            font-size: 1rem;
+            border-left: 4px solid var(--dourado);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+        
         #loading {
             text-align: center;
-            margin: 30px;
+            padding: 2rem;
+            display: none;
         }
-        #tempo-espera {
-            background-color: #FEF9E7;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            text-align: center;
-            font-size: 1em;
-            border-left: 5px solid var(--cor-secundaria);
-        }
-        #observacoes {
-            min-height: 80px;
-        }
+        
         .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            width: 36px;
-            height: 36px;
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(227, 24, 55, 0.2);
             border-radius: 50%;
-            border-left-color: var(--cor-primaria);
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
+            border-top-color: var(--vermelho-chines);
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 1rem;
         }
+        
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
+        
         .empty-cart {
             text-align: center;
-            color: #7F8C8D;
-            padding: 20px;
+            padding: 2rem;
+            color: #888;
+            font-style: italic;
+        }
+        
+        .notificacao {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #2ECC71;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .notificacao.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .notificacao.erro {
+            background: #E74C3C;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .cardapio-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Efeitos especiais */
+        .destaque {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(227, 24, 55, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(227, 24, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(227, 24, 55, 0); }
+        }
+        
+        .badge {
+            display: inline-block;
+            background: var(--dourado);
+            color: var(--preto-lacrado);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+            vertical-align: middle;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>🍜 Restaurante Chinês Oriental</h1>
-    </header>
-    
-    <section>
-        <h2>Cardápio</h2>
+    <div class="container">
+        <header>
+            <h1>龙之味 <span class="badge">Lóng zhī wèi</span></h1>
+            <p>Autêntica culinária chinesa desde 1985</p>
+        </header>
         
-        <div id="cardapio">
-            <div class="cardapio-item">
-                <span>🍗 Frango Xadrez - R$35.00</span>
-                <button class="adicionar-btn" onclick="adicionarCarrinho('Frango Xadrez', 35)">+ Adicionar</button>
+        <section>
+            <h2>🍜 Nosso Cardápio Imperial</h2>
+            <div class="cardapio-grid">
+                <div class="cardapio-item">
+                    <span>🍗 Frango Xadrez</span>
+                    <div class="preco">R$ 35,00</div>
+                    <button class="adicionar-btn" onclick="adicionarCarrinho('Frango Xadrez', 35)">
+                        <span>+</span> Adicionar
+                    </button>
+                </div>
+                
+                <div class="cardapio-item">
+                    <span>🍜 Yakissoba</span>
+                    <div class="preco">R$ 40,00</div>
+                    <button class="adicionar-btn" onclick="adicionarCarrinho('Yakissoba', 40)">
+                        <span>+</span> Adicionar
+                    </button>
+                </div>
+                
+                <div class="cardapio-item">
+                    <span>🌯 Rolinho Primavera</span>
+                    <div class="preco">R$ 25,00</div>
+                    <button class="adicionar-btn" onclick="adicionarCarrinho('Rolinho Primavera', 25)">
+                        <span>+</span> Adicionar
+                    </button>
+                </div>
+                
+                <div class="cardapio-item">
+                    <span>🍤 Camarão Empanado</span>
+                    <div class="preco">R$ 45,00</div>
+                    <button class="adicionar-btn" onclick="adicionarCarrinho('Camarão Empanado', 45)">
+                        <span>+</span> Adicionar
+                    </button>
+                </div>
+                
+                <div class="cardapio-item">
+                    <span>🥟 Dim Sum</span>
+                    <div class="preco">R$ 30,00</div>
+                    <button class="adicionar-btn" onclick="adicionarCarrinho('Dim Sum', 30)">
+                        <span>+</span> Adicionar
+                    </button>
+                </div>
+                
+                <div class="cardapio-item">
+                    <span>🍚 Arroz Frito Yangzhou</span>
+                    <div class="preco">R$ 28,00</div>
+                    <button class="adicionar-btn" onclick="adicionarCarrinho('Arroz Frito Yangzhou', 28)">
+                        <span>+</span> Adicionar
+                    </button>
+                </div>
             </div>
-            <div class="cardapio-item">
-                <span>🍜 Yakissoba - R$40.00</span>
-                <button class="adicionar-btn" onclick="adicionarCarrinho('Yakissoba', 40)">+ Adicionar</button>
+        </section>
+        
+        <section class="carrinho-container">
+            <h2>🛒 Seu Pedido Imperial</h2>
+            <ul id="lista-carrinho"></ul>
+            <div id="total">Total: R$ 0,00</div>
+            
+            <div id="tempo-espera">
+                ⏱️ <strong>Tempo médio de preparo:</strong> 30-40 minutos
             </div>
-            <div class="cardapio-item">
-                <span>🌯 Rolinho Primavera - R$25.00</span>
-                <button class="adicionar-btn" onclick="adicionarCarrinho('Rolinho Primavera', 25)">+ Adicionar</button>
+        </section>
+        
+        <section class="info-cliente">
+            <h2>📋 Informações do Cliente</h2>
+            
+            <div class="form-group">
+                <label for="nome">Nome Completo</label>
+                <input type="text" id="nome" placeholder="Como devemos chamá-lo?" required>
             </div>
-            <div class="cardapio-item">
-                <span>🍤 Camarão Empanado - R$45.00</span>
-                <button class="adicionar-btn" onclick="adicionarCarrinho('Camarão Empanado', 45)">+ Adicionar</button>
+            
+            <div class="form-group">
+                <label for="telefone">WhatsApp</label>
+                <input type="tel" id="telefone" placeholder="(00) 00000-0000" required>
             </div>
-            <div class="cardapio-item">
-                <span>🥟 Dim Sum - R$30.00</span>
-                <button class="adicionar-btn" onclick="adicionarCarrinho('Dim Sum', 30)">+ Adicionar</button>
+            
+            <div class="form-group">
+                <label for="mesa">Mesa/Entrega</label>
+                <input type="text" id="mesa" placeholder="Número da mesa ou endereço" required>
             </div>
+            
+            <div class="form-group">
+                <label for="observacoes">Observações</label>
+                <textarea id="observacoes" placeholder="Alergias, modificações ou pedidos especiais"></textarea>
+            </div>
+            
+            <button class="enviar-btn" onclick="enviarPedido()">
+                📤 Enviar Pedido via WhatsApp
+            </button>
+        </section>
+        
+        <div id="loading" class="hidden">
+            <div class="spinner"></div>
+            <p>Preparando seu pedido imperial...</p>
         </div>
-    </section>
-    
-    <section>
-        <h2>🛒 Seu Pedido</h2>
-        <ul id="lista-carrinho"></ul>
-        <div id="total">Total: R$0.00</div>
-        
-        <div id="tempo-espera">
-            ⏱️ <strong>Tempo médio de preparo:</strong> 30-40 minutos
-        </div>
-    </section>
-    
-    <section>
-        <h2>📋 Informações do Cliente</h2>
-        <input type="text" id="nome" placeholder="Seu nome completo" required>
-        <input type="tel" id="telefone" placeholder="Seu WhatsApp com DDD (ex: 11987654321)" required>
-        <input type="text" id="mesa" placeholder="Número da mesa ou 'Entrega'" required>
-        <textarea id="observacoes" placeholder="Observações, alergias ou pedidos especiais"></textarea>
-        
-        <button class="enviar-btn" onclick="enviarPedido()">
-            📤 Enviar Pedido via WhatsApp
-        </button>
-    </section>
-    
-    <div id="loading" class="hidden">
-        <div class="spinner"></div>
-        <p>Preparando seu pedido...</p>
     </div>
 
     <script>
@@ -204,13 +488,22 @@
             carrinho.push({ item, preco });
             atualizarCarrinho();
             mostrarNotificacao(`✔️ ${item} adicionado ao carrinho!`);
+            
+            // Efeito visual no item do cardápio
+            const buttons = document.querySelectorAll('.adicionar-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.includes(item)) {
+                    btn.classList.add('destaque');
+                    setTimeout(() => btn.classList.remove('destaque'), 2000);
+                }
+            });
         }
 
         function removerCarrinho(index) {
             const itemRemovido = carrinho[index].item;
             carrinho.splice(index, 1);
             atualizarCarrinho();
-            mostrarNotificacao(`❌ ${itemRemovido} removido do carrinho`);
+            mostrarNotificacao(`❌ ${itemRemovido} removido do carrinho`, 'erro');
         }
 
         function atualizarCarrinho() {
@@ -220,7 +513,7 @@
             
             if (carrinho.length === 0) {
                 lista.innerHTML = '<li class="empty-cart">Seu carrinho está vazio</li>';
-                total.textContent = 'Total: R$0.00';
+                total.textContent = 'Total: R$ 0,00';
                 return;
             }
             
@@ -229,36 +522,34 @@
                 const li = document.createElement('li');
                 li.className = 'carrinho-item';
                 li.innerHTML = `
-                    <span>${item} - R$${preco.toFixed(2)}</span>
+                    <span>${item} - R$ ${preco.toFixed(2).replace('.', ',')}</span>
                     <button class="remover-btn" onclick="removerCarrinho(${i})">Remover</button>
                 `;
                 lista.appendChild(li);
                 soma += preco;
             });
-            total.textContent = `Total: R$${soma.toFixed(2)}`;
+            
+            total.textContent = `Total: R$ ${soma.toFixed(2).replace('.', ',')}`;
         }
 
-        function mostrarNotificacao(mensagem) {
+        function mostrarNotificacao(mensagem, tipo = 'sucesso') {
             const notificacao = document.createElement('div');
-            notificacao.style.position = 'fixed';
-            notificacao.style.bottom = '20px';
-            notificacao.style.right = '20px';
-            notificacao.style.backgroundColor = '#2ECC71';
-            notificacao.style.color = 'white';
-            notificacao.style.padding = '12px 20px';
-            notificacao.style.borderRadius = '6px';
-            notificacao.style.zIndex = '1000';
-            notificacao.style.boxShadow = '0 3px 6px rgba(0,0,0,0.16)';
-            notificacao.textContent = mensagem;
+            notificacao.className = `notificacao ${tipo === 'erro' ? 'erro' : ''}`;
+            notificacao.innerHTML = `
+                ${tipo === 'erro' ? '❌' : '✔️'} ${mensagem}
+            `;
             
             document.body.appendChild(notificacao);
             
             setTimeout(() => {
-                notificacao.style.opacity = '0';
-                notificacao.style.transition = 'opacity 0.5s';
+                notificacao.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notificacao.classList.remove('show');
                 setTimeout(() => {
                     document.body.removeChild(notificacao);
-                }, 500);
+                }, 400);
             }, 3000);
         }
 
@@ -283,41 +574,45 @@
 
             // Validações
             if (!nome) {
-                alert('Por favor, informe seu nome completo.');
+                mostrarNotificacao('Por favor, informe seu nome completo.', 'erro');
+                document.getElementById('nome').focus();
                 return;
             }
             
             if (!telefone || !validarTelefone(telefone)) {
-                alert('Por favor, informe um número de WhatsApp válido com DDD.');
+                mostrarNotificacao('Por favor, informe um WhatsApp válido com DDD.', 'erro');
+                document.getElementById('telefone').focus();
                 return;
             }
             
             if (!mesa) {
-                alert('Por favor, informe o número da mesa ou "Entrega".');
+                mostrarNotificacao('Por favor, informe a mesa ou "Entrega".', 'erro');
+                document.getElementById('mesa').focus();
                 return;
             }
             
             if (carrinho.length === 0) {
-                alert('Seu carrinho está vazio. Adicione pelo menos um item.');
+                mostrarNotificacao('Seu carrinho está vazio. Adicione itens!', 'erro');
                 return;
             }
 
             // Mostrar loading
-            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('loading').style.display = 'block';
+            document.querySelector('.enviar-btn').disabled = true;
 
             // Formatar mensagem
-            let mensagem = `*🏮 PEDIDO - RESTAURANTE CHINÊS ORIENTAL 🏮*\n\n` +
+            let mensagem = `*🏮 PEDIDO - RESTAURANTE CHINÊS IMPERIAL 🏮*\n\n` +
                 `👤 *Cliente:* ${nome}\n` +
                 `📱 *WhatsApp:* ${formatarTelefone(telefone)}\n` +
                 `📍 *Mesa/Entrega:* ${mesa}\n\n` +
                 `🍽️ *Itens do Pedido:*\n`;
 
             carrinho.forEach(({ item, preco }) => {
-                mensagem += `✔️ ${item} - R$${preco.toFixed(2)}\n`;
+                mensagem += `✔️ ${item} - R$ ${preco.toFixed(2).replace('.', ',')}\n`;
             });
 
             const total = carrinho.reduce((s, i) => s + i.preco, 0);
-            mensagem += `\n💰 *Total:* R$${total.toFixed(2)}\n\n` +
+            mensagem += `\n💰 *Total:* R$ ${total.toFixed(2).replace('.', ',')}\n\n` +
                         `⏱️ *Tempo estimado:* 30-40 minutos\n`;
             
             if (observacoes) {
@@ -334,7 +629,8 @@
             // Abrir WhatsApp após pequeno delay para mostrar o loading
             setTimeout(() => {
                 window.open(url, '_blank');
-                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('loading').style.display = 'none';
+                document.querySelector('.enviar-btn').disabled = false;
                 
                 // Limpar carrinho após envio
                 carrinho.length = 0;
@@ -348,6 +644,21 @@
                 mostrarNotificacao('✅ Pedido enviado com sucesso!');
             }, 1500);
         }
+
+        // Máscara para telefone
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.substring(0, 11);
+            
+            if (value.length > 0) {
+                value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+                if (value.length > 10) {
+                    value = value.replace(/(\d)(\d{4})$/, '$1-$2');
+                }
+            }
+            
+            e.target.value = value;
+        });
 
         // Inicializar carrinho vazio
         atualizarCarrinho();
