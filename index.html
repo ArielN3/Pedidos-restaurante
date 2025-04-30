@@ -1,55 +1,356 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Menu Restaurante Chinês</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos - Restaurante Chinês</title>
+    <style>
+        :root {
+            --cor-primaria: #E74C3C;
+            --cor-secundaria: #F5B041;
+            --cor-texto: #333;
+            --cor-fundo: #FDF2E9;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+        }
+        h1, h2 {
+            color: var(--cor-primaria);
+            text-align: center;
+        }
+        .cardapio-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .carrinho-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .remover-btn {
+            background: #E74C3C;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .remover-btn:hover {
+            background: #C0392B;
+        }
+        .adicionar-btn {
+            background: #2ECC71;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .adicionar-btn:hover {
+            background: #27AE60;
+        }
+        #total {
+            font-weight: bold;
+            font-size: 1.3em;
+            margin: 15px 0;
+            text-align: right;
+            color: var(--cor-primaria);
+        }
+        input, button, textarea {
+            padding: 12px;
+            margin: 8px 0;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .enviar-btn {
+            background: var(--cor-primaria);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        .enviar-btn:hover {
+            background: #C0392B;
+        }
+        .hidden {
+            display: none;
+        }
+        #loading {
+            text-align: center;
+            margin: 30px;
+        }
+        #tempo-espera {
+            background-color: #FEF9E7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1em;
+            border-left: 5px solid var(--cor-secundaria);
+        }
+        #observacoes {
+            min-height: 80px;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--cor-primaria);
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .empty-cart {
+            text-align: center;
+            color: #7F8C8D;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Menu Chinês</h1>
-  <div class="menu">
-    <div class="item">
-      <span>Yakissoba - R$25</span>
-      <button onclick="adicionarCarrinho('Yakissoba', 25)">Adicionar</button>
+    <header>
+        <h1>🍜 Restaurante Chinês Oriental</h1>
+    </header>
+    
+    <section>
+        <h2>Cardápio</h2>
+        
+        <div id="cardapio">
+            <div class="cardapio-item">
+                <span>🍗 Frango Xadrez - R$35.00</span>
+                <button class="adicionar-btn" onclick="adicionarCarrinho('Frango Xadrez', 35)">+ Adicionar</button>
+            </div>
+            <div class="cardapio-item">
+                <span>🍜 Yakissoba - R$40.00</span>
+                <button class="adicionar-btn" onclick="adicionarCarrinho('Yakissoba', 40)">+ Adicionar</button>
+            </div>
+            <div class="cardapio-item">
+                <span>🌯 Rolinho Primavera - R$25.00</span>
+                <button class="adicionar-btn" onclick="adicionarCarrinho('Rolinho Primavera', 25)">+ Adicionar</button>
+            </div>
+            <div class="cardapio-item">
+                <span>🍤 Camarão Empanado - R$45.00</span>
+                <button class="adicionar-btn" onclick="adicionarCarrinho('Camarão Empanado', 45)">+ Adicionar</button>
+            </div>
+            <div class="cardapio-item">
+                <span>🥟 Dim Sum - R$30.00</span>
+                <button class="adicionar-btn" onclick="adicionarCarrinho('Dim Sum', 30)">+ Adicionar</button>
+            </div>
+        </div>
+    </section>
+    
+    <section>
+        <h2>🛒 Seu Pedido</h2>
+        <ul id="lista-carrinho"></ul>
+        <div id="total">Total: R$0.00</div>
+        
+        <div id="tempo-espera">
+            ⏱️ <strong>Tempo médio de preparo:</strong> 30-40 minutos
+        </div>
+    </section>
+    
+    <section>
+        <h2>📋 Informações do Cliente</h2>
+        <input type="text" id="nome" placeholder="Seu nome completo" required>
+        <input type="tel" id="telefone" placeholder="Seu WhatsApp com DDD (ex: 11987654321)" required>
+        <input type="text" id="mesa" placeholder="Número da mesa ou 'Entrega'" required>
+        <textarea id="observacoes" placeholder="Observações, alergias ou pedidos especiais"></textarea>
+        
+        <button class="enviar-btn" onclick="enviarPedido()">
+            📤 Enviar Pedido via WhatsApp
+        </button>
+    </section>
+    
+    <div id="loading" class="hidden">
+        <div class="spinner"></div>
+        <p>Preparando seu pedido...</p>
     </div>
-    <div class="item">
-      <span>Frango Xadrez - R$28</span>
-      <button onclick="adicionarCarrinho('Frango Xadrez', 28)">Adicionar</button>
-    </div>
-    <div class="item">
-      <span>Rolinho Primavera - R$10</span>
-      <button onclick="adicionarCarrinho('Rolinho Primavera', 10)">Adicionar</button>
-    </div>
-    <div class="item">
-      <span>Guioza - R$15</span>
-      <button onclick="adicionarCarrinho('Guioza', 15)">Adicionar</button>
-    </div>
-  </div>
 
-  <div class="carrinho">
-    <h2>Carrinho</h2>
-    <ul id="lista-carrinho"></ul>
-    <p id="total"></p>
-  </div>
+    <script>
+        const carrinho = [];
+        const numeroWhatsApp = '5561981227195'; // Número do restaurante
 
-  <div class="checkout">
-    <h2>Finalizar Pedido</h2>
-    <div class="form-group">
-      <label>Nome:</label>
-      <input type="text" id="nome">
-    </div>
-    <div class="form-group">
-      <label>Telefone:</label>
-      <input type="text" id="telefone">
-    </div>
-    <div class="form-group">
-      <label>Número da Mesa:</label>
-      <input type="text" id="mesa">
-    </div>
-    <button class="enviar" onclick="enviarPedido()">Enviar Pedido via WhatsApp</button>
-  </div>
+        function adicionarCarrinho(item, preco) {
+            carrinho.push({ item, preco });
+            atualizarCarrinho();
+            mostrarNotificacao(`✔️ ${item} adicionado ao carrinho!`);
+        }
 
-  <script src="script.js"></script>
+        function removerCarrinho(index) {
+            const itemRemovido = carrinho[index].item;
+            carrinho.splice(index, 1);
+            atualizarCarrinho();
+            mostrarNotificacao(`❌ ${itemRemovido} removido do carrinho`);
+        }
+
+        function atualizarCarrinho() {
+            const lista = document.getElementById('lista-carrinho');
+            const total = document.getElementById('total');
+            lista.innerHTML = '';
+            
+            if (carrinho.length === 0) {
+                lista.innerHTML = '<li class="empty-cart">Seu carrinho está vazio</li>';
+                total.textContent = 'Total: R$0.00';
+                return;
+            }
+            
+            let soma = 0;
+            carrinho.forEach(({ item, preco }, i) => {
+                const li = document.createElement('li');
+                li.className = 'carrinho-item';
+                li.innerHTML = `
+                    <span>${item} - R$${preco.toFixed(2)}</span>
+                    <button class="remover-btn" onclick="removerCarrinho(${i})">Remover</button>
+                `;
+                lista.appendChild(li);
+                soma += preco;
+            });
+            total.textContent = `Total: R$${soma.toFixed(2)}`;
+        }
+
+        function mostrarNotificacao(mensagem) {
+            const notificacao = document.createElement('div');
+            notificacao.style.position = 'fixed';
+            notificacao.style.bottom = '20px';
+            notificacao.style.right = '20px';
+            notificacao.style.backgroundColor = '#2ECC71';
+            notificacao.style.color = 'white';
+            notificacao.style.padding = '12px 20px';
+            notificacao.style.borderRadius = '6px';
+            notificacao.style.zIndex = '1000';
+            notificacao.style.boxShadow = '0 3px 6px rgba(0,0,0,0.16)';
+            notificacao.textContent = mensagem;
+            
+            document.body.appendChild(notificacao);
+            
+            setTimeout(() => {
+                notificacao.style.opacity = '0';
+                notificacao.style.transition = 'opacity 0.5s';
+                setTimeout(() => {
+                    document.body.removeChild(notificacao);
+                }, 500);
+            }, 3000);
+        }
+
+        function validarTelefone(telefone) {
+            const numeroLimpo = telefone.replace(/\D/g, '');
+            return numeroLimpo.length >= 10 && numeroLimpo.length <= 13;
+        }
+
+        function formatarTelefone(telefone) {
+            const numeroLimpo = telefone.replace(/\D/g, '');
+            if (numeroLimpo.length === 11) {
+                return numeroLimpo.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            }
+            return telefone;
+        }
+
+        function enviarPedido() {
+            const nome = document.getElementById('nome').value.trim();
+            const telefone = document.getElementById('telefone').value.trim();
+            const mesa = document.getElementById('mesa').value.trim();
+            const observacoes = document.getElementById('observacoes').value.trim();
+
+            // Validações
+            if (!nome) {
+                alert('Por favor, informe seu nome completo.');
+                return;
+            }
+            
+            if (!telefone || !validarTelefone(telefone)) {
+                alert('Por favor, informe um número de WhatsApp válido com DDD.');
+                return;
+            }
+            
+            if (!mesa) {
+                alert('Por favor, informe o número da mesa ou "Entrega".');
+                return;
+            }
+            
+            if (carrinho.length === 0) {
+                alert('Seu carrinho está vazio. Adicione pelo menos um item.');
+                return;
+            }
+
+            // Mostrar loading
+            document.getElementById('loading').classList.remove('hidden');
+
+            // Formatar mensagem
+            let mensagem = `*🏮 PEDIDO - RESTAURANTE CHINÊS ORIENTAL 🏮*\n\n` +
+                `👤 *Cliente:* ${nome}\n` +
+                `📱 *WhatsApp:* ${formatarTelefone(telefone)}\n` +
+                `📍 *Mesa/Entrega:* ${mesa}\n\n` +
+                `🍽️ *Itens do Pedido:*\n`;
+
+            carrinho.forEach(({ item, preco }) => {
+                mensagem += `✔️ ${item} - R$${preco.toFixed(2)}\n`;
+            });
+
+            const total = carrinho.reduce((s, i) => s + i.preco, 0);
+            mensagem += `\n💰 *Total:* R$${total.toFixed(2)}\n\n` +
+                        `⏱️ *Tempo estimado:* 30-40 minutos\n`;
+            
+            if (observacoes) {
+                mensagem += `📝 *Observações:*\n${observacoes}\n\n`;
+            }
+            
+            mensagem += `🙏 *Agradecemos pela preferência!*\n` +
+                       `🔔 Seu pedido será preparado em breve.`;
+
+            // Codificar a mensagem para URL
+            const mensagemCodificada = encodeURIComponent(mensagem);
+            const url = `https://wa.me/${numeroWhatsApp}?text=${mensagemCodificada}`;
+
+            // Abrir WhatsApp após pequeno delay para mostrar o loading
+            setTimeout(() => {
+                window.open(url, '_blank');
+                document.getElementById('loading').classList.add('hidden');
+                
+                // Limpar carrinho após envio
+                carrinho.length = 0;
+                atualizarCarrinho();
+                document.getElementById('nome').value = '';
+                document.getElementById('telefone').value = '';
+                document.getElementById('mesa').value = '';
+                document.getElementById('observacoes').value = '';
+                
+                // Notificação de sucesso
+                mostrarNotificacao('✅ Pedido enviado com sucesso!');
+            }, 1500);
+        }
+
+        // Inicializar carrinho vazio
+        atualizarCarrinho();
+    </script>
 </body>
 </html>
